@@ -1,0 +1,518 @@
+{
+	"info": {
+		"_postman_id": "dd543741-bc39-4ef5-8a00-93616b6d9daa",
+		"name": "API - Web-calc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API_from_sites",
+			"item": [
+				{
+					"name": "https://master.dev.sollerstr.ru/rentcalc/api/quote-uaz?",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eca6b309-4e10-4523-a2ca-c28c58d2ed0c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{api-pass}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{api-name}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"modificationCode\": \"236031J101\",\r\n    \"period\": 60, \r\n    \"mileage\":  250000,//за год\r\n    \"car_price\": 1037900\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{path}}/rentcalc/api/quote-uaz",
+							"protocol": "https",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"rentcalc",
+								"api",
+								"quote-uaz"
+							]
+						},
+						"description": "\"modificationCode\" - incadea код УАЗа\n\"period\" - [12, 18, 24, 36, 48, 60]\n\"mileage\" - пробег за год\n\"car_price\" - в рублях"
+					},
+					"response": []
+				},
+				{
+					"name": "https://master.dev.sollerstr.ru/login/rentcalc/api/quote (FORD)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "261497ea-7d03-4bef-b482-464be0f7118a",
+								"exec": [
+									"console.log(\"ДО теста\");",
+									"console.log(pm.request);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ecafe422-ca4c-4d22-b344-0407e14f9f11",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"console.log(pm.response);",
+									"console.log(pm.response.code);",
+									"console.log(pm.request);",
+									"console.log(\"ПОСЛЕ\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{api-pass}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{api-name}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"modificationCode\": \"SCB1\",\r\n    \"period\": 48,\r\n    \"mileage\": 50000,\r\n    \"car_price\": 2950000,\r\n    \"dealerId\": \"UR155\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{path}}/rentcalc/api/quote",
+							"protocol": "https",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"rentcalc",
+								"api",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "WEB-calc-tests",
+			"item": [
+				{
+					"name": "API-Calc-Ford7",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "93e05e38-e3d7-4397-a6e3-a29d909d87b7",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d09ec00-e477-4d9d-afbc-e56ae35c5063",
+								"exec": [
+									"",
+									"",
+									"// td_period = [12, 24, 36, 48, 60];",
+									"// td_mileage = [10000, 50000,100000,150000,200000,250000];",
+									"td_period=pm.iterationData.get(\"period\")",
+									"td_mileage=pm.iterationData.get(\"mileage\")",
+									"",
+									"//Покрыто",
+									"// td_period = [12, 24, 36, 48, 60];",
+									"// td_mileage = [10000,100000];",
+									"var exp_result = {",
+									"             \"12_10000\": {  ",
+									"                \"status\": \"success\",",
+									"                \"result\": 96950,",
+									"                \"Rent_Price_Without_NDS\": 80791.66666666667,",
+									"                \"Total_Price_With_NDS\": 1163400,",
+									"                \"Total_Price_Without_NDS\": 969500,",
+									"                \"Profitability_without_VAT\": 16270,",
+									"                \"Profitability_percent\": 0.2,",
+									"                \"overRun\": 0,",
+									"                \"underRun\": 0,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 123262",
+									"            },",
+									"            \"24_10000\": {",
+									"                \"status\": \"success\",",
+									"                \"result\": 72816,",
+									"                \"Rent_Price_Without_NDS\": 60680,",
+									"                \"Total_Price_With_NDS\": 1747584,",
+									"                \"Total_Price_Without_NDS\": 1456320,",
+									"                \"Profitability_without_VAT\": 14968,",
+									"                \"Profitability_percent\": 0.25,",
+									"                \"overRun\": 4.4352,",
+									"                \"underRun\": 1.1088,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 89228",
+									"            },",
+									"            \"36_10000\": {",
+									"                \"status\": \"success\",",
+									"                \"result\": 65435,",
+									"                \"Rent_Price_Without_NDS\": 54529.16666666667,",
+									"                \"Total_Price_With_NDS\": 2355660,",
+									"                \"Total_Price_Without_NDS\": 1963050.0000000002,",
+									"                \"Profitability_without_VAT\": 14386,",
+									"                \"Profitability_percent\": 0.26,",
+									"                \"overRun\": 0,",
+									"                \"underRun\": 0,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 78569",
+									"            },",
+									"            \"48_10000\": {",
+									"                \"FinLeasePayment\": 72200,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"Rent_Price_Without_NDS\": 50550.833333333336,",
+									"                \"Total_Price_With_NDS\": 2911728,",
+									"                \"Total_Price_Without_NDS\": 2426440,",
+									"                \"overRun\": 3.696,",
+									"                \"result\": 60661,",
+									"                \"underRun\": 0.924,",
+									"                \"Profitability_percent\": 0.28,",
+									"                \"Profitability_without_VAT\": 14158",
+									"            },",
+									"            \"60_10000\": {",
+									"                \"FinLeasePayment\": 68350,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"Rent_Price_Without_NDS\": 48121.66666666667,",
+									"                \"Total_Price_With_NDS\": 3464760,",
+									"                \"Total_Price_Without_NDS\": 2887300.0000000005,",
+									"                \"overRun\": 0,",
+									"                \"result\": 57746,",
+									"                \"underRun\": 0,",
+									"                \"Profitability_percent\": 0.29,",
+									"                \"Profitability_without_VAT\": 14019",
+									"            },",
+									"            \"12_100000\": {  ",
+									"                \"status\": \"success\",",
+									"                \"result\": 127057,",
+									"                \"Rent_Price_Without_NDS\": 105880.83333333334,",
+									"                \"Total_Price_With_NDS\": 1524684,",
+									"                \"Total_Price_Without_NDS\": 1270570,",
+									"                \"Profitability_without_VAT\": 15805,",
+									"                \"Profitability_percent\": 0.15,",
+									"                \"overRun\": 16.1568,",
+									"                \"underRun\": 4.0392,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 153358",
+									"            },",
+									"            \"24_100000\": {",
+									"                \"status\": \"success\",",
+									"                \"result\": 86214,",
+									"                \"Rent_Price_Without_NDS\": 71845,",
+									"                \"Total_Price_With_NDS\": 2069136,",
+									"                \"Total_Price_Without_NDS\": 1724280,",
+									"                \"Profitability_without_VAT\": 14587,",
+									"                \"Profitability_percent\": 0.2,",
+									"                \"overRun\": 16.4736,",
+									"                \"underRun\": 4.1184,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 102626",
+									"            },",
+									"            \"36_100000\": {",
+									"                \"status\": \"success\",",
+									"                \"result\": 73498,",
+									"                \"Rent_Price_Without_NDS\": 61248.333333333336,",
+									"                \"Total_Price_With_NDS\": 2645928,",
+									"                \"Total_Price_Without_NDS\": 2204940,",
+									"                \"Profitability_without_VAT\": 14168,",
+									"                \"Profitability_percent\": 0.23,",
+									"                \"overRun\": 17.6616,",
+									"                \"underRun\": 4.4154,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 86654",
+									"            },",
+									"            \"48_100000\": {",
+									"                \"status\": \"success\",",
+									"                \"result\": 66491,",
+									"                \"Rent_Price_Without_NDS\":  55409.16666666667,",
+									"                \"Total_Price_With_NDS\": 3191568,",
+									"                \"Total_Price_Without_NDS\": 2659640,",
+									"                \"Profitability_without_VAT\": 13946,",
+									"                \"Profitability_percent\": 0.25,",
+									"                \"overRun\": 14.4672,",
+									"                \"underRun\": 3.6168,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 78030",
+									"            },",
+									"            \"60_100000\": {",
+									"                \"status\": \"success\",",
+									"                \"result\": 61970,",
+									"                \"Rent_Price_Without_NDS\": 51641.66666666667,",
+									"                \"Total_Price_With_NDS\": 3718200,",
+									"                \"Total_Price_Without_NDS\": 3098500.0000000005,",
+									"                \"Profitability_without_VAT\": 13882,",
+									"                \"Profitability_percent\": 0.27,",
+									"                \"overRun\": 18.612,",
+									"                \"underRun\": 4.653,",
+									"                \"FinLeasePrepayment\": 801000,",
+									"                \"FinLeasePayment\": 72563",
+									"            }",
+									"}",
+									"            ",
+									"",
+									"",
+									"    test_case = td_period+\"_\"+td_mileage;",
+									"    console.log(test_case);",
+									"    var expected_result = exp_result[String(test_case)];",
+									"    console.log(expected_result);",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    pm.test(\"Проверяем, что тело ответа в принципе есть\", function () {",
+									"        pm.response.to.have.body();",
+									"    });",
+									"",
+									"    pm.test(\"Проверяем объекты входящие в ответ\", function () {",
+									"    pm.expect(Object.keys(jsonData)).to.have.members([\"meta\", \"dSet\", \"req\", \"view\",\"result\",\"total_view\",\"logId\"]);",
+									"    });",
+									"",
+									"    pm.test(\"Проверяем объекты входящие в dSet\", function () {",
+									"    pm.expect(Object.keys(jsonData.dSet)).to.have.members([\"base\", \"overrun\", \"leasing\"]);",
+									"    });",
+									"",
+									"    //---------",
+									"    console.log(jsonData);",
+									"    console.log(Object.keys(jsonData.result));",
+									"",
+									"    console.log(\"------Проверяем расчет--------\");",
+									"    pm.test(\"Rent_With_NDS = \"+expected_result.result, function () {",
+									"        pm.expect(jsonData.result.result).to.eql(expected_result.result);",
+									"    });",
+									"",
+									"    pm.test(\"Rent_Price_Without_NDS = \"+expected_result.Rent_Price_Without_NDS, function () {",
+									"    pm.expect(jsonData.result.Rent_Price_Without_NDS).to.eql(expected_result.Rent_Price_Without_NDS);",
+									"    });",
+									"",
+									"",
+									"    pm.test(\"Total_Price_With_NDS = \"+expected_result.Total_Price_With_NDS, function () {",
+									"        pm.expect(jsonData.result.Total_Price_With_NDS).to.eql(expected_result.Total_Price_With_NDS);",
+									"    });",
+									"    pm.test(\"Total_Price_Without_NDS = \"+expected_result.Total_Price_Without_NDS, function () {",
+									"        pm.expect(jsonData.result.Total_Price_Without_NDS).to.eql(expected_result.Total_Price_Without_NDS);",
+									"    });",
+									"    pm.test(\"Profitability_without_VAT = \"+expected_result.Profitability_without_VAT, function () {",
+									"        pm.expect(Math.round(jsonData.dSet.base.result.Profitability_without_VAT)).to.eql(expected_result.Profitability_without_VAT);",
+									"    });",
+									"    pm.test(\"Profitability_percent = \"+expected_result.Profitability_percent, function () {",
+									"        pm.expect(+jsonData.dSet.base.result.Profitability_percent.toFixed(2)).to.eql(expected_result.Profitability_percent);",
+									"    });",
+									"",
+									"",
+									"    pm.test(\"result[\\\"result\\\"]  has overRun\", function () {",
+									"        pm.expect(jsonData.result).to.have.property(\"overRun\").that.eql(expected_result.overRun);",
+									"    });",
+									"",
+									"",
+									"    pm.test(\"result[\\\"result\\\"]  has underRun\", function () {",
+									"        pm.expect(jsonData.result).to.have.property(\"underRun\").that.eql(expected_result.underRun);",
+									"    });",
+									"",
+									"",
+									"    pm.test(\"result[\\\"result\\\"]  has FinLeasePrepayment\", function () {",
+									"        pm.expect(jsonData.result).to.have.property(\"FinLeasePrepayment\").that.eql(expected_result.FinLeasePrepayment);",
+									"    });",
+									"",
+									"",
+									"",
+									"    pm.test(\"result[\\\"result\\\"]  has FinLeasePayment\", function () {",
+									"        pm.expect(jsonData.result).to.have.property(\"FinLeasePayment\").that.eql(expected_result.FinLeasePayment);",
+									"    });",
+									"",
+									"",
+									"",
+									"",
+									"    pm.test(\"result[\\\"result\\\"]  has logId\", function () {",
+									"        pm.expect(jsonData).to.have.property(\"logId\");",
+									"    });",
+									"    console.log(jsonData.logId);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \"meta[orderId]\": \"Учебный\",\n    \"brand\": \"Ford\",\n    \"modification_id\": 7,\n    \"autoClass\": \"Medium Van Cargo\",\n    \"autoType\": \"Грузовой\",\n    \"autoCategory\": \"B\",\n    \"hp\": 125,\n    \"tyresNum\": 4,\n    \"tyresType\": \"235/65 R16C\",\n    \"RRP_with_VAT\": 2670000,\n    \"channel\": \"Калькулятор\",\n    \"period\": {{period}},\n    \"mileage\": {{mileage}},\n    \"car_price\": 2670000,\n    \"isWithoutSMR\": \"false\",\n    \"isWithoutTyresAmount\": \"false\",\n    \"isWithoutTyresStoring\": \"false\",\n    \"isWithoutSubsidy\": \"false\",\n    \"guarantee_payments_N\": 0,\n    \"model\": \"Transit\",\n    \"maxSubsidy\": 500000,\n    \"isWebCalc\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://master.k.sollerstr.ru/rentcalc/api/calculate",
+							"protocol": "https",
+							"host": [
+								"master",
+								"k",
+								"sollerstr",
+								"ru"
+							],
+							"path": [
+								"rentcalc",
+								"api",
+								"calculate"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "(проверочный)https://master.k.sollerstr.ru/rentcalc/api/calculate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3721fad6-0331-4dbe-8f5d-d788d301ccf2",
+						"exec": [
+							"// RequestBodySets=[\r",
+							"//     {\r",
+							"//         \"brand\": \"UAZ\",\r",
+							"//         \"modification_id\": 67,\r",
+							"//         \"autoClass\": \"Medium Van Cargo\",\r",
+							"//         \"autoType\": \"Грузовой\",\r",
+							"//         \"autoCategory\": \"B\",\r",
+							"//         \"hp\": 149.6,\r",
+							"//         \"tyresNum\": 6,\r",
+							"//         \"tyresType\": \"195/75 R16C\",\r",
+							"//         \"RRP_with_VAT\": 1113900,\r",
+							"//         \"channel\": \"Калькулятор\",\r",
+							"//         \"period\": 36,\r",
+							"//         \"mileage\": 100000,\r",
+							"//         \"car_price\": 1113900,\r",
+							"//         \"isWithoutSMR\": \"false\",\r",
+							"//         \"isWithoutTyresAmount\": \"false\",\r",
+							"//         \"isWithoutTyresStoring\": \"false\",\r",
+							"//         \"isWithoutSubsidy\": \"false\",\r",
+							"//         \"guarantee_payments_N\": 0,\r",
+							"//         \"model\": \"ПРОФИ\",\r",
+							"//         \"maxSubsidy\": 500000,\r",
+							"//         \"isWebCalc\": \"true\"\r",
+							"//     },\r",
+							"//     {\r",
+							"//         \"brand\": \"LADA\",\r",
+							"//         \"modification_id\": 215,\r",
+							"//         \"autoClass\": \"Lower+A+B\",\r",
+							"//         \"autoType\": \"Легковой\",\r",
+							"//         \"autoCategory\": \"B\",\r",
+							"//         \"hp\": 87,\r",
+							"//         \"tyresNum\": 4,\r",
+							"//         \"tyresType\": \"185/60 R14\",\r",
+							"//         \"RRP_with_VAT\": 547500,\r",
+							"//         \"channel\": \"Калькулятор\",\r",
+							"//         \"period\": 48,\r",
+							"//         \"mileage\": 200000,\r",
+							"//         \"car_price\": 547500,\r",
+							"//         \"isWithoutSMR\": \"false\",\r",
+							"//         \"isWithoutTyresAmount\": \"false\",\r",
+							"//         \"isWithoutTyresStoring\": \"false\",\r",
+							"//         \"isWithoutSubsidy\": \"false\",\r",
+							"//         \"guarantee_payments_N\": 0,\r",
+							"//         \"model\": \"Transit\",\r",
+							"//         \"maxSubsidy\": 500000,\r",
+							"//         \"isWebCalc\": \"true\"\r",
+							"        \r",
+							"//     }\r",
+							"// ]"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"brand\": \"Ford\",\r\n    \"modification_id\": 7,\r\n    \"autoClass\": \"Medium Van Cargo\",\r\n    \"autoType\": \"Грузовой\",\r\n    \"autoCategory\": \"B\",\r\n    \"hp\": 125,\r\n    \"tyresNum\": 4,\r\n    \"tyresType\": \"235/65 R16C\",\r\n    \"RRP_with_VAT\": 2670000,\r\n    \"channel\": \"Калькулятор\",\r\n    \"period\": 12,\r\n    \"mileage\": 100000,\r\n    \"car_price\": 2670000,\r\n    \"isWithoutSMR\": \"false\",\r\n    \"isWithoutTyresAmount\": \"false\",\r\n    \"isWithoutTyresStoring\": \"false\",\r\n    \"isWithoutSubsidy\": \"false\",\r\n    \"guarantee_payments_N\": 0,\r\n    \"model\": \"Transit\",\r\n    \"maxSubsidy\": 500000,\r\n    \"isWebCalc\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://master.k.sollerstr.ru/rentcalc/api/calculate",
+					"protocol": "https",
+					"host": [
+						"master",
+						"k",
+						"sollerstr",
+						"ru"
+					],
+					"path": [
+						"rentcalc",
+						"api",
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
