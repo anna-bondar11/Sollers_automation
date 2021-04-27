@@ -1,0 +1,8 @@
+
+[
+    {"period": 12, "mileage": 50000},
+    {"period": 24, "mileage": 100000},
+    {"period": 36, "mileage": 150000},
+    {"period": 48, "mileage": 200000},
+    {"period": 60, "mileage": 250000}
+]
