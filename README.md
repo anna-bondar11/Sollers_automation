@@ -1,4 +1,4 @@
-#Sollers Postman API automation testing
+# Sollers Postman API automation testing
 
 ## Установка
 1.	Установка Node.js, npm	
@@ -24,4 +24,5 @@ npm install -g newman-reporter-htmlextra
 `newman run postman_collections/API_Web-calc.postman_collection.json --folder WEB-calc-tests -e environment_variables/master_var.json -d iterations/API-Web-calc-year-mileage_short.json -r htmlextra --reporter-htmlextra-export Test_Results/Results_report_$(date +%Y-%m-%d_%H-%M-%S).html` 
 
 *Запуск генерации Отчетов*
+
 `-r htmlextra --reporter-htmlextra-export Test_Results/Results_report_$(date +%Y-%m-%d_%H-%M-%S).html`
